@@ -27,3 +27,23 @@ Here are the columns of the merged dataset:
 - `'date'`: The date the review was submitted.
 - `'rating'`: The numeric rating given to the recipe.
 - `'review'`: The text review for the recipe.
+
+# Data Cleaning and Exploratory Data Analysis
+## Data Cleaning
+- The first step is to left-merge the recipe dataset with the reviews dataset, so that each row has both the recipe details and a review of that recipe.
+
+- Some more cleaning steps will be necessary to make the dataset simpler for analysis. Only the columns that may be relevant to this analysis will be kept for simplification purposes. Here are the kept columns and their datatypes.
+- `'id'`: int64
+- `'minutes'`: int64
+- `'tags'`: str
+- `'n_steps'`: int64
+- `'n_ingredients'`: int64
+- `'rating'`: float64
+
+- The rating column has 0.0 values for some reviews. The website food.com allows users to leave reviews without providing a numerical rating, which means that these 0.0 values are not representative of a rating of 0. Rather, the 0.0 means a numerical value is missing for these reviews. Therefore, all 0.0 rating need to be  replaced with `np.nan`.
+
+- A column, `average_rating`, will be added. This will provide the average rating of the corresponding recipe for each row.
+
+- At this point, it will be fine to drop the `rating` column, since the `average_rating` column will store the rating info for each recipe, and we are not aiming to analyze this dataset based on individual reviews. After `rating` is dropped, there will be duplicate rows that exist since a recipe can have more than one review. Duplicate rows will be dropped to ensure that there is only one row of information per recipe.
+
+## Univariate Analysis
