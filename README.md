@@ -1,10 +1,10 @@
 # Food and Time Cost
 # Overview
-This project was conducted for Practice and Application of Data Science (DSC 80) at UCSD. It aims to further insight into how significant the time cost of a recipe is to people's perception of recipes and/or cooking.
+This project was conducted for Practice and Application of Data Science (DSC 80) at UCSD. It aims to further insight into how significant the total fat content of a recipe is to people's perception of recipes and/or cooking.
 # Introduction
 Recipes are an important tool for any cook, whether it's for needing a step-by-step guide on a dish, learning the basics through a guide, and so much more. The taste and overall satisfaction from the resulting product of a recipe would be an average person's metrics for evaluating how good a recipe is.
 
-But there are many who give more thought to the contents of the meals they create and eat. Some may focus specifically on several nutritional metrics in order to keep track of a healthy diet. Especially in America, where we have one of the highest obesity rates in the world, the fat content of foods can be especially worrisome. Fast-food and quick meals are widespread and convenient, but those who seek out recipes to cook may do so in order to find healthy alternatives to avoid the pitfalls of convenient, cheap meals-to-go.
+But there are many who give more thought to the contents of the meals they create and eat, rather than just taste and satisfaction. Some may focus specifically on several nutritional metrics in order to keep track of a healthy diet. Especially in America, where we have one of the highest obesity rates in the world, the fat content of foods can be especially worrisome. Fast-food and quick meals are widespread and convenient, but those who seek out recipes to cook may do so in order to find healthy alternatives to avoid the pitfalls of convenient, cheap meals-to-go.
 
 Taking this mindset of some people into consideration, one might wonder **if the fat content of a recipe influences one's rating of the recipe.**
 
@@ -131,3 +131,20 @@ The resulting p-value is a 0.0. Below is the plot of generated differences, as w
 ></iframe>
 
 The calculated p-value is less than our significance level of 0.05. Therefore, we **reject the null**, since our results indicate that **people tend to give lower ratings to more fatty recipes than less fatty recipes**, possibly due to health concerns like obesity.
+
+# Framing a Prediction Problem
+Now that we've seen that total fat content can influence one's rating of a recipe, we can use this to predict the rating of a recipe based on its fat content. This will be a multi-class classification problem, in which we will try to fit a model that predicts a recipe as one of five categories, each an ordinal rating from 1 through 5.
+
+The response variable will be `average_rating`, since we are interested in predicting a recipe's overall rating, not just individual ratings. The metric that will be used to evaluate the model's performance will be the F1-score, mainly due to the high positive skew of ratings towards in the dataset. A combination of both precision and recall metrics would be best for accounting for this skew.
+
+# Baseline Model
+The baseline model will use a train-test split separate our DataFrame into training and test groups. A Random Forest Classifier will be fit using our training data. The two features that will be used for the baseline will be `total_fat_(PDV)` and `n_steps`. Both will be standardized so that they are in comparable range of each other due to extreme outliers.
+
+The F1 of this model resulted in a 
+
+# Final Model
+In addition to the features above, I will also add:
+- `minutes`: An earlier exploration into the dataset and the relationship between cooking time and ratings revealed that people tend to give recipes with higher cook times lower ratings, possibly since many would prefer that cooking does not take up too much of a day as they might have other obligations, such as education, career, and so on. This feature will be standardized to account for the fact that there are extreme outliers in this column.
+- `more_fatty`: Again, we saw earlier that there is a relationship between the fat content of a recipe and ratings. This will be binarized with the threshold being the median total fat content among all of the recipes.
+
+We will also adjust some hyperparameters for our Random Forest Classifier using `GridSearchCV`, specificallt `max_depth` and `n_estimators`.
