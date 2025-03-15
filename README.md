@@ -101,7 +101,7 @@ Note that the above plot's scale was modified to ensure a fitting representation
 - **Null Hypothesis**: The missingness of `rating` **does not** depend on the length of the recipe in minutes.
 - **Alternative Hypothesis**: The missingness of `rating` **does** depend on the length of the recipe in minutes.
 
-The same process as above was used for this permutation test. Below is the plot of the differences and the observed test statistic as a green line. The resulting p-value is 0.118, which is greater than our significance level of 0.05.
+The same process as above was used for this permutation test. Below is the plot of the differences and the observed test statistic as a green line. The resulting p-value is 0.128, which is greater than our significance level of 0.05.
 
 <iframe
   src="assets/minsperm.html"
@@ -122,6 +122,12 @@ A permutation test is fitting for this scenario since we wish to explore if the 
 - **Test Statistic**: Difference between mean rating of more fatty foods and mean rating of less fatty foods.
 
 The resulting p-value is a 0.0. Below is the plot of generated differences, as well as the observed p-value as a green line.
-**ADD GRAPH HERE**
+
+<iframe
+  src="assets/fatperm.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
 
 The calculated p-value is less than our significance level of 0.05. Therefore, we **reject the null**, since our results indicate that **people tend to give lower ratings to more fatty recipes than less fatty recipes**, possibly due to health concerns like obesity.
