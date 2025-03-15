@@ -39,7 +39,8 @@ Here are the columns of the merged dataset:
 5. A column, `more_fatty`, will be created. For each recipe, this will hold a Boolean value that indicates whether a recipe has a higher total fat content than the median or not. The reason the median is used is because the total fat column holds some extreme outliers. Using the mean would skew the data, so we will use the median to lessen the influence of those outliers.
 
 In summary, nine new columns were added to the DataFrame, which will help with our analyses. Below is a summary of the new columns, their value types, and what information they hold.
-| Name | Dtype | Description|
+
+| Name | Dtype | Description |
 | --------- | -------- | -------- |
 | `calories_(#)` | float64 | Calorie count of the recipe. |
 | `total_fat_(PDV)` | float64 | Total fat content in Percent Daily Value (PDV). |
