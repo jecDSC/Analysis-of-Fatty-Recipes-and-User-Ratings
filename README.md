@@ -38,9 +38,23 @@ Here are the columns of the merged dataset:
 
 5. A column, `more_fatty`, will be created. For each recipe, this will hold a Boolean value that indicates whether a recipe has a higher total fat content than the median or not. The reason the median is used is because the total fat column holds some extreme outliers. Using the mean would skew the data, so we will use the median to lessen the influence of those outliers.
 
-## Univariate Analysis
+In summary, nine new columns were added to the DataFrame, which will help with our analyses. Below is a summary of the new columns, their value types, and what information they hold.
+| Name | Dtype | Description|
+| --------- | -------- | -------- |
+| `calories_(#)` | float64 | Calorie count of the recipe. |
+| `total_fat_(PDV)` | float64 | Total fat content in Percent Daily Value (PDV). |
+| `sugar_(PDV)` | float64 | Sugar content in PDV. |
+| `sodium_(PDV)` | float64 | Sodium content in PDV. |
+| `protein_(PDV)` | float64 | Protein content in PDV. |
+| `saturated_fat_(PDV)` | float64 | Saturated fat content in PDV. |
+| `carbohydrates_(PDV)` | float64 | Carbohydrates content in PDV. |
+| `average_rating` | float64 | Average rating of the specified recipe. |
+| `more_fatty` | Boolean | Indicates if a recipe's total fat content is above the median or not. |
 
-Because of outliers, visualizing the minute values using a plot is not ideal, as shown below.
+## Univariate Analysis
+Below is the box visualization of the column `total_fat_(PDV)`.
+**ADD GRAPH HERE**
+Since there are extreme outliers, I'll use the median over the mean so that the outliers do not have too extreme of an influence on my measure of central tendency.
 
 # Assessment of Missingness
 ## NMAR Analysis
@@ -52,9 +66,9 @@ We will now explore the dependency of the `rating` column on two other columns, 
 First, we will take a look at **if there is a dependency between `rating` and `n_steps`**.
 **ADD PLOT HERE**
 - **Null Hypothesis**: The missingness of `rating` **does not** depend on the number of steps.
-- **Null Hypothesis**: The missingness of `rating` **does** depend on the number of steps.
+- **Alternative Hypothesis**: The missingness of `rating` **does** depend on the number of steps.
 
-Below is the plot of the simulated differences of 500 permutations of the `rating_missing` column, which indicates with a Boolean whether or not a row is missing `rating` data. The observed test statistic will also be indicated by a green line. The resulting p-value is 0.0. 
+Below is the plot of the simulated differences of 500 permutations of the `rating_missing` column, which indicates with a Boolean whether or not a row is missing `rating` data. The observed test statistic will also be indicated by a green line. The resulting p-value is 0.0, which is less than our significance level of 0.05. 
 
 **ADD PLOT HERE LATER**
 
@@ -65,10 +79,24 @@ Next, we will take a look at **if there is a dependency between `rating` and `mi
 Note that the above plot's scale was modified to ensure a fitting representation of the data, as there are extreme outliers in the minutes column.
 
 - **Null Hypothesis**: The missingness of `rating` **does not** depend on the length of the recipe in minutes.
-- **Null Hypothesis**: The missingness of `rating` **does** depend on the length of the recipe in minutes.
+- **Alternative Hypothesis**: The missingness of `rating` **does** depend on the length of the recipe in minutes.
 
-The same process as above was used for this permutation test. Below is the plot of the differences and the observed test statistic as a green line. The resulting p-value is 0.118.
+The same process as above was used for this permutation test. Below is the plot of the differences and the observed test statistic as a green line. The resulting p-value is 0.118, which is greater than our significance level of 0.05.
 
 **ADD PLOT HERE LATER**
 
 This leads us to **failing to reject the null**. The missingness of `rating` does not depend on the column `minutes`.
+
+# Hypothesis Testing
+Now, back to exploring the relationship between fat content and ratings. We will run a permutation test between two groups: recipes that have a higher fat content than the median, and recipes that have a lower fat content than the median. The test will run 500 permutations of the `more_fatty` column, and the significance level will be set to 0.05.
+
+A permutation test is fitting for this scenario since we wish to explore if the distributions are similar between our two fatty groups. The hypothesis will be one-tailed as we are curious if a higher fat content would influence people to give lower ratings to a recipe, which would imply that people may use the nutritional value of a recipe to judge it.
+
+- **Null Hypothesis**: Ratings given to recipes more fatty than the median are similar to ratings given to less fatty recipes.
+- **Alternative Hypothesis**: Ratings given to recipes more fatty than the median are lower than ratings given to less fatty recipes.
+- **Test Statistic**: Difference between mean rating of more fatty foods and mean rating of less fatty foods.
+
+The resulting p-value is a 0.0. Below is the plot of generated differences, as well as the observed p-value as a green line.
+**ADD GRAPH HERE**
+
+The calculated p-value is less than our significance level of 0.05. Therefore, we **reject the null**, since our results indicate that **people tend to give lower ratings to more fatty recipes than less fatty recipes**, possibly due to health concerns like obesity.
