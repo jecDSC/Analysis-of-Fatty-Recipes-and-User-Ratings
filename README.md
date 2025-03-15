@@ -68,7 +68,7 @@ First, we will take a look at **if there is a dependency between `rating` and `n
 
 <iframe
   src="assets/stepsVrating.html"
-  width="500"
+  width="650"
   height="600"
   frameborder="0"
 ></iframe>
