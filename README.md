@@ -65,7 +65,14 @@ In the merged DataFrame, four columns, `rating`, `review`, `date`, and `average_
 We will now explore the dependency of the `rating` column on two other columns, `n_steps` and `minutes`. Each test will use a significance level of 0.05, and the test statistic will simply be the absolute difference between two groups: one that is missing `rating` data and one that is not missing `rating` data.
 
 First, we will take a look at **if there is a dependency between `rating` and `n_steps`**.
-**ADD PLOT HERE**
+
+<iframe
+  src="assets/stepsVrating.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
 - **Null Hypothesis**: The missingness of `rating` **does not** depend on the number of steps.
 - **Alternative Hypothesis**: The missingness of `rating` **does** depend on the number of steps.
 
