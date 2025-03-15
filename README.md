@@ -52,6 +52,16 @@ In summary, nine new columns were added to the DataFrame, which will help with o
 | `average_rating` | float64 | Average rating of the specified recipe. |
 | `more_fatty` | Boolean | Indicates if a recipe's total fat content is above the median or not. |
 
+Here is a subset of the resulting DataFrame with only the relevant columns to illustrate what we have so far.
+
+|     id |   minutes | nutrition                                    |   n_steps |   n_ingredients | date       |   rating |   calories_(#) |   total_fat_(PDV) |   sugar_(PDV) |   sodium_(PDV) |   protein_(PDV) |   saturated_fat_(PDV) |   carbohydrates_(PDV) |   average_rating |
+|-------:|----------:|:---------------------------------------------|----------:|----------------:|:-----------|---------:|---------------:|------------------:|--------------:|---------------:|----------------:|----------------------:|----------------------:|-----------------:|
+| 333281 |        40 | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]     |        10 |               9 | 2008-11-19 |        4 |          138.4 |                10 |            50 |              3 |               3 |                    19 |                     6 |                4 |
+| 453467 |        45 | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0] |        12 |              11 | 2012-01-26 |        5 |          595.1 |                46 |           211 |             22 |              13 |                    51 |                    26 |                5 |
+| 306168 |        40 | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 |               9 | 2008-12-31 |        5 |          194.8 |                20 |             6 |             32 |              22 |                    36 |                     3 |                5 |
+| 306168 |        40 | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 |               9 | 2009-04-13 |        5 |          194.8 |                20 |             6 |             32 |              22 |                    36 |                     3 |                5 |
+| 306168 |        40 | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 |               9 | 2013-08-02 |        5 |          194.8 |                20 |             6 |             32 |              22 |                    36 |                     3 |                5 |
+
 ## Univariate Analysis
 Below is the histogram of the column `total_fat_(PDV)`.
 
@@ -76,7 +86,40 @@ We will also create a visualization of all ratings to understand the distributio
 The data is very positively skewed, with most ratings around a 4 or 5. The skew of these two graphs will need to be taken into consideration when fitting a classifier for predicting ratings.
 
 ## Bivariate Analysis
+Let's generate a histogram of ratings based on the fat content of a recipe, using the `more_fatty` column.
 
+<iframe
+  src="assets/ratingFatDist.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
+
+It seems like there are more ratings available for more fatty foods. Let's also take a look at the distribution of ratings for each group: more fatty and less fatty.
+
+| More fatty? | True | False |
+| Rating | --------- | ---------- |
+| 5 | 0.78 | 0.77 |
+| 4 | 0.16 | 0.18 |
+| 3 | 0.03 | 0.03 |
+| 2 | 0.01 | 0.01 |
+| 1 | 0.01 | 0.01 |
+
+The distributions between the two groups are very across the board.
+
+## Interesting Aggregates
+
+Let's group the DataFrame by ratings and generate the summary statistics for the `total_fat_(PDV)` column.
+
+|   rating |   count |    mean |     std |   min |   25% |   50% |   75% |   max |
+|---------:|--------:|--------:|--------:|------:|------:|------:|------:|------:|
+|        1 |    2870 | 37.0564 | 76.4182 |     0 |     8 |    19 |    41 |  2255 |
+|        2 |    2368 | 32.7669 | 44.7717 |     0 |     8 |    20 |    41 |   594 |
+|        3 |    7172 | 31.6405 | 54.5192 |     0 |     8 |    20 |    39 |  2255 |
+|        4 |   37307 | 29.9404 | 44.8592 |     0 |     8 |    19 |    37 |  1341 |
+|        5 |  169676 | 31.7924 | 55.4171 |     0 |     8 |    20 |    39 |  3464 |
+
+The 1-point rating column has the highest mean total fat content out of the five ratings. This may hint at the fact that people tend to rate more fatty recipes lower. This row also has the highest standard deviation. As rating increases, the mean and standard deviation of total fat content decreases, which suggests that in the higher ratings, people tend to give higher ratings to less fatty foods more than more fatty foods.
 
 # Assessment of Missingness
 ## NMAR Analysis
