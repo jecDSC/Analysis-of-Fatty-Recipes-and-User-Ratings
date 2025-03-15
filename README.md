@@ -78,7 +78,12 @@ First, we will take a look at **if there is a dependency between `rating` and `n
 
 Below is the plot of the simulated differences of 500 permutations of the `rating_missing` column, which indicates with a Boolean whether or not a row is missing `rating` data. The observed test statistic will also be indicated by a green line. The resulting p-value is 0.0, which is less than our significance level of 0.05. 
 
-**ADD PLOT HERE LATER**
+<iframe
+  src="assets/stepsperm.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
 
 This leads us to **reject the null**. The missingness of `rating` depends on the column `n_steps`.
 
