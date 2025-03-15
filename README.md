@@ -1,4 +1,4 @@
-# Food and Time Cost
+# Analysis of Fatty Recipes and User Ratings
 # Overview
 This project was conducted for Practice and Application of Data Science (DSC 80) at UCSD. It aims to further insight into how significant the total fat content of a recipe is to people's perception of recipes and/or cooking.
 # Introduction
