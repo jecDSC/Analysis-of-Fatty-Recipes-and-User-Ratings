@@ -8,7 +8,7 @@ But there are many who give more thought to the contents of the meals they creat
 
 Taking this mindset of some people into consideration, one might wonder **if the fat content of a recipe influences one's rating of the recipe.**
 
-To explore this question, I will use two datasets from [food.com](food.com), one of recipes and another of ratings of recipes across the website. Merging the two datasets results in 234429 rows of data ready for analysis. More on how the two datasets were merged will be explained later.
+To explore this question, we will use two datasets from [food.com](food.com), one of recipes and another of ratings of recipes across the website. Merging the two datasets results in 234429 rows of data ready for analysis. More on how the two datasets were merged will be explained later.
 
 Here are the columns of the merged dataset:
 - `'name'`: The name of the recipe.
@@ -53,9 +53,30 @@ In summary, nine new columns were added to the DataFrame, which will help with o
 | `more_fatty` | Boolean | Indicates if a recipe's total fat content is above the median or not. |
 
 ## Univariate Analysis
-Below is the box visualization of the column `total_fat_(PDV)`.
-**ADD GRAPH HERE**
-Since there are extreme outliers, I'll use the median over the mean so that the outliers do not have too extreme of an influence on my measure of central tendency.
+Below is the histogram of the column `total_fat_(PDV)`.
+
+<iframe
+  src="assets/fatHist.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Since there are extreme outliers, we will use the median over the mean so that the outliers do not have too extreme of an influence on my measure of central tendency. The median is 20. Most of the data is between fences 0 and 85.
+
+We will also create a visualization of all ratings to understand the distribution of ratings.
+
+<iframe
+  src="assets/ratingDist.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
+
+The data is very positively skewed, with most ratings around a 4 or 5. The skew of these two graphs will need to be taken into consideration when fitting a classifier for predicting ratings.
+
+## Bivariate Analysis
+
 
 # Assessment of Missingness
 ## NMAR Analysis
@@ -140,11 +161,28 @@ The response variable will be `average_rating`, since we are interested in predi
 # Baseline Model
 The baseline model will use a train-test split separate our DataFrame into training and test groups. A Random Forest Classifier will be fit using our training data. The two features that will be used for the baseline will be `total_fat_(PDV)` and `n_steps`. Both will be standardized so that they are in comparable range of each other due to extreme outliers.
 
-The F1 of this model resulted in a 
+The F1 of this model is a 0.76949. For each category from 1 to 5, the F1 scores are 0.11, 0.0, 0.09, 0.21, and 0.77. The skew of the ratings is to explain why the predictions for higher ratings were better, since there were more data for the model to train for higher ratings.
 
 # Final Model
-In addition to the features above, I will also add:
+In addition to the features above, we will also add:
 - `minutes`: An earlier exploration into the dataset and the relationship between cooking time and ratings revealed that people tend to give recipes with higher cook times lower ratings, possibly since many would prefer that cooking does not take up too much of a day as they might have other obligations, such as education, career, and so on. This feature will be standardized to account for the fact that there are extreme outliers in this column.
 - `more_fatty`: Again, we saw earlier that there is a relationship between the fat content of a recipe and ratings. This will be binarized with the threshold being the median total fat content among all of the recipes.
 
-We will also adjust some hyperparameters for our Random Forest Classifier using `GridSearchCV`, specificallt `max_depth` and `n_estimators`.
+We will also adjust some hyperparameters for our Random Forest Classifier using `RandomizedSearchCV`, specifically `max_depth`, `n_estimators`, `min_samples_split`, and `criterion`.
+
+Respectively, the hyperparameter values are 2, 50, 100, and `'entropy'`.
+
+Using these hyperparameters and four features, we run the Random Forest Classifier once more.
+
+The F1 of this model is a 0.77008, only slightly better than the baseline model. In addition, the model made 5 as its prediction for all cases. Perhaps predicting a 5 for all cases would result in a more accurate model than making predictions for lower ratings. Again, skew is an issue when training this model, because the high density of high ratings makes it so that the model predicts high ratings well in comparison to lower ratings. Two solutions to improve this model further would be to oversample (randomly duplicating data in the smaller categories) or undersample (randomly delete data in the larger categories).
+
+# Fairness Analysis
+Let's examine how this model performs for recipes with high sugar versus recipes with low sugar. The median will be used to split the recipes, since sugar also has a high positive skew of data. The median for `sugar_(PDV)` is 22. A new column, `high_sugar`, will be used to track this new metric.
+
+For this permutation test, we will run 500 permutations of the `high_sugar` column. The significance value will be set to 0.05.
+
+- **Null Hypothesis**: The classifier's accuracy is the same for both sugary and non-sugary foods.
+- **Alternative Hypothesis**: The classifier's accuracy is better for more sugary foods.
+- **Test Statistic**: Difference in accuracy of model for more sugary foods and accuracy for less sugary foods.
+
+The resulting p-value from this permutation test is 0.038. Therefore, we **reject the null**. It seems like our classifier is unfair towards less sugary foods, seeing that more sugary foods have a higher accuracy score when using this model.
