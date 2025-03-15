@@ -88,7 +88,14 @@ Below is the plot of the simulated differences of 500 permutations of the `ratin
 This leads us to **reject the null**. The missingness of `rating` depends on the column `n_steps`.
 
 Next, we will take a look at **if there is a dependency between `rating` and `minutes`**.
-**ADD PLOT HERE**
+
+<iframe
+  src="assets/minsVrating.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
+
 Note that the above plot's scale was modified to ensure a fitting representation of the data, as there are extreme outliers in the minutes column.
 
 - **Null Hypothesis**: The missingness of `rating` **does not** depend on the length of the recipe in minutes.
@@ -96,7 +103,12 @@ Note that the above plot's scale was modified to ensure a fitting representation
 
 The same process as above was used for this permutation test. Below is the plot of the differences and the observed test statistic as a green line. The resulting p-value is 0.118, which is greater than our significance level of 0.05.
 
-**ADD PLOT HERE LATER**
+<iframe
+  src="assets/minsperm.html"
+  width="650"
+  height="600"
+  frameborder="0"
+></iframe>
 
 This leads us to **failing to reject the null**. The missingness of `rating` does not depend on the column `minutes`.
 
